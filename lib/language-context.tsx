@@ -54,13 +54,8 @@ const translations: Translations = {
 	},
 
 	// Auth
-	"auth.google": { en: "Continue with Google", ro: "Continua cu Google" },
-	"auth.microsoft": {
-		en: "Continue with Microsoft",
-		ro: "Continua cu Microsoft",
-	},
 	"auth.github": { en: "Continue with GitHub", ro: "Continua cu GitHub" },
-	"auth.or": { en: "or sign in with", ro: "sau conecteaza-te cu" },
+	"auth.signIn": { en: "Sign in to get started", ro: "Conecteaza-te pentru a incepe" },
 
 	// Dashboard
 	"dash.title": { en: "Dashboard", ro: "Panou de Control" },
