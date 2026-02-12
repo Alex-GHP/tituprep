@@ -1,6 +1,14 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+	createContext,
+	useContext,
+	useState,
+	useCallback,
+	useEffect,
+} from "react";
+import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/lib/supabase/auth-provider";
 
 type Language = "en" | "ro";
 
@@ -16,7 +24,10 @@ const translations: Translations = {
 		ro: "Exerseaza mai inteligent cu examene cronometrate si antrenament pe materii.",
 	},
 	"hero.cta": { en: "Get Started", ro: "Incepe Acum" },
-	"hero.spotlight": { en: "Developer Spotlight", ro: "Proiectul Dezvoltatorului" },
+	"hero.spotlight": {
+		en: "Developer Spotlight",
+		ro: "Proiectul Dezvoltatorului",
+	},
 	"hero.spotlightDesc": {
 		en: "Built with passion for CS students preparing for their exams.",
 		ro: "Creat cu pasiune pentru studentii de informatica.",
@@ -33,7 +44,10 @@ const translations: Translations = {
 		en: "Practice with real code snippets and syntax-highlighted questions.",
 		ro: "Exerseaza cu fragmente de cod reale si intrebari cu evidentierea sintaxei.",
 	},
-	"features.trackProgress": { en: "Track Progress", ro: "Urmareste Progresul" },
+	"features.trackProgress": {
+		en: "Track Progress",
+		ro: "Urmareste Progresul",
+	},
 	"features.trackProgressDesc": {
 		en: "Monitor your scores and progress across subjects and exams.",
 		ro: "Monitorizeaza scorurile si progresul pe materii si examene.",
@@ -101,7 +115,10 @@ const translations: Translations = {
 	"results.score": { en: "Your Score", ro: "Scorul Tau" },
 	"results.correct": { en: "Correct", ro: "Corecte" },
 	"results.incorrect": { en: "Incorrect", ro: "Incorecte" },
-	"results.review": { en: "Review Answers", ro: "Revizuieste Raspunsurile" },
+	"results.review": {
+		en: "Review Answers",
+		ro: "Revizuieste Raspunsurile",
+	},
 	"results.explanation": { en: "Explanation", ro: "Explicatie" },
 	"results.yourAnswer": { en: "Your answer", ro: "Raspunsul tau" },
 	"results.correctAnswer": { en: "Correct answer", ro: "Raspunsul corect" },
@@ -153,7 +170,44 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 );
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-	const [language, setLanguage] = useState<Language>("en");
+	const [language, setLanguageState] = useState<Language>("en");
+	const { user } = useAuth();
+	const supabase = createClient();
+
+	// Load preferred language from profile on mount
+	useEffect(() => {
+		if (!user) return;
+		supabase
+			.from("profiles")
+			.select("preferred_language")
+			.eq("id", user.id)
+			.single()
+			.then(({ data }) => {
+				if (data?.preferred_language) {
+					setLanguageState(data.preferred_language as Language);
+				}
+			});
+	}, [user, supabase]);
+
+	// Update <html lang> attribute when language changes
+	useEffect(() => {
+		document.documentElement.lang = language;
+	}, [language]);
+
+	const setLanguage = useCallback(
+		(lang: Language) => {
+			setLanguageState(lang);
+			// Persist to profile if logged in
+			if (user) {
+				supabase
+					.from("profiles")
+					.update({ preferred_language: lang })
+					.eq("id", user.id)
+					.then(() => {});
+			}
+		},
+		[user, supabase],
+	);
 
 	const t = useCallback(
 		(key: string) => {
