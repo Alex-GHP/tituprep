@@ -88,6 +88,7 @@ export async function generateRandomExam(): Promise<string | null> {
 
 /**
  * Submit an exam attempt and save it to the database.
+ * Also updates the user's daily streak.
  */
 export async function submitExamAttempt(params: {
 	examId: string;
@@ -121,7 +122,58 @@ export async function submitExamAttempt(params: {
 
 	if (error || !attempt) return null;
 
+	// Update daily streak
+	await updateStreak(supabase, user.id);
+
 	return attempt.id;
+}
+
+/**
+ * Update the user's daily streak after completing an attempt.
+ * - If last active was yesterday: increment streak
+ * - If last active was today: no change (already counted)
+ * - If last active was >1 day ago or null: reset streak to 1
+ */
+async function updateStreak(
+	supabase: Awaited<ReturnType<typeof createClient>>,
+	userId: string,
+) {
+	const { data: profile } = (await supabase
+		.from("profiles")
+		.select("streak_count, last_active_date")
+		.eq("id", userId)
+		.single()) as unknown as {
+		data: { streak_count: number; last_active_date: string | null } | null;
+	};
+
+	if (!profile) return;
+
+	const today = new Date();
+	const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD
+
+	// Already active today — nothing to update
+	if (profile.last_active_date === todayStr) return;
+
+	let newStreak = 1; // default: reset
+
+	if (profile.last_active_date) {
+		const lastDate = new Date(profile.last_active_date);
+		const yesterday = new Date(today);
+		yesterday.setDate(yesterday.getDate() - 1);
+		const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+		if (profile.last_active_date === yesterdayStr) {
+			// Consecutive day — increment streak
+			newStreak = profile.streak_count + 1;
+		}
+	}
+
+	await (supabase.from("profiles") as ReturnType<typeof supabase.from>)
+		.update({
+			streak_count: newStreak,
+			last_active_date: todayStr,
+		} as Record<string, unknown>)
+		.eq("id", userId);
 }
 
 function shuffleArray<T>(array: T[]): T[] {

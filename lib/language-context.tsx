@@ -148,8 +148,34 @@ const translations: Translations = {
 	// Nav
 	"nav.home": { en: "Home", ro: "Home" },
 	"nav.dashboard": { en: "Dashboard", ro: "Dashboard" },
+	"nav.leaderboard": { en: "Leaderboard", ro: "Leaderboard" },
 	"nav.about": { en: "About", ro: "About" },
 	"nav.signOut": { en: "Sign Out", ro: "Deconecteaza-te" },
+	"nav.streak": { en: "day streak", ro: "zile consecutive" },
+
+	// Leaderboard
+	"leaderboard.title": { en: "Leaderboard", ro: "Leaderboard" },
+	"leaderboard.subtitle": {
+		en: "See how you rank against other students.",
+		ro: "Vezi cum te clasezi fata de ceilalti studenti.",
+	},
+	"leaderboard.yourRank": { en: "Your Rank", ro: "Pozitia Ta" },
+	"leaderboard.score": { en: "Score", ro: "Scor" },
+	"leaderboard.streak": { en: "Streak", ro: "Serie" },
+	"leaderboard.multiplier": { en: "Multiplier", ro: "Multiplicator" },
+	"leaderboard.rankings": { en: "Rankings", ro: "Clasament" },
+	"leaderboard.empty": {
+		en: "No entries yet. Complete an exam to appear on the leaderboard!",
+		ro: "Nicio intrare inca. Completeaza un examen pentru a aparea in clasament!",
+	},
+	"leaderboard.you": { en: "You", ro: "Tu" },
+	"leaderboard.dayStreak": { en: "day streak", ro: "zile consecutive" },
+	"leaderboard.base": { en: "base", ro: "baza" },
+	"leaderboard.howItWorks": { en: "How scoring works:", ro: "Cum functioneaza scorul:" },
+	"leaderboard.howItWorksDesc": {
+		en: "Your leaderboard score is the sum of all your exam scores multiplied by your streak bonus. Each consecutive day you complete an exam adds ×0.1 to your multiplier.",
+		ro: "Scorul tau in clasament este suma tuturor scorurilor tale la examene, inmultita cu bonusul de obitnut prin daily streak. Fiecare zi consecutiva in care completezi un examen adauga ×0.1 la multiplicator.",
+	},
 
 	// Common
 	"common.darkMode": { en: "Dark Mode", ro: "Dark Mode" },

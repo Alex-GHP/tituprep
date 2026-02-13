@@ -105,29 +105,35 @@ export interface Database {
 					position?: number;
 				};
 			};
-			profiles: {
-				Row: {
-					id: string;
-					display_name: string | null;
-					avatar_url: string | null;
-					preferred_language: "en" | "ro";
-					created_at: string;
-				};
-				Insert: {
-					id: string;
-					display_name?: string | null;
-					avatar_url?: string | null;
-					preferred_language?: "en" | "ro";
-					created_at?: string;
-				};
-				Update: {
-					id?: string;
-					display_name?: string | null;
-					avatar_url?: string | null;
-					preferred_language?: "en" | "ro";
-					created_at?: string;
-				};
+		profiles: {
+			Row: {
+				id: string;
+				display_name: string | null;
+				avatar_url: string | null;
+				preferred_language: "en" | "ro";
+				streak_count: number;
+				last_active_date: string | null;
+				created_at: string;
 			};
+			Insert: {
+				id: string;
+				display_name?: string | null;
+				avatar_url?: string | null;
+				preferred_language?: "en" | "ro";
+				streak_count?: number;
+				last_active_date?: string | null;
+				created_at?: string;
+			};
+			Update: {
+				id?: string;
+				display_name?: string | null;
+				avatar_url?: string | null;
+				preferred_language?: "en" | "ro";
+				streak_count?: number;
+				last_active_date?: string | null;
+				created_at?: string;
+			};
+		};
 			user_attempts: {
 				Row: {
 					id: string;

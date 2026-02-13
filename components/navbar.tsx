@@ -1,19 +1,53 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/language-context";
 import { ThemeToggle } from "./theme-toggle";
 import { LanguageToggle } from "./language-toggle";
 import { Button } from "@/components/ui/button";
-import { LogOut, LayoutDashboard, Home, Info } from "lucide-react";
+import {
+	LogOut,
+	LayoutDashboard,
+	Home,
+	Info,
+	Trophy,
+	Flame,
+} from "lucide-react";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function Navbar() {
 	const { user, signOut } = useAuth();
 	const { t } = useLanguage();
 	const pathname = usePathname();
 	const router = useRouter();
+	const [streak, setStreak] = useState<number>(0);
+
+	// Fetch streak count for logged-in user
+	useEffect(() => {
+		if (!user) {
+			setStreak(0);
+			return;
+		}
+		const supabase = createClient();
+		(supabase
+			.from("profiles")
+			.select("streak_count")
+			.eq("id", user.id)
+			.single() as unknown as Promise<{
+			data: { streak_count: number } | null;
+		}>).then(({ data }) => {
+			if (data) setStreak(data.streak_count);
+		});
+	}, [user]);
 
 	const handleSignOut = async () => {
 		await signOut();
@@ -55,6 +89,23 @@ export function Navbar() {
 							</Button>
 							<Button
 								variant={
+									pathname === "/leaderboard"
+										? "secondary"
+										: "ghost"
+								}
+								size="sm"
+								asChild
+								className="gap-1.5 text-foreground"
+							>
+								<Link href="/leaderboard">
+									<Trophy className="h-4 w-4" />
+									<span className="hidden sm:inline">
+										{t("nav.leaderboard")}
+									</span>
+								</Link>
+							</Button>
+							<Button
+								variant={
 									pathname === "/about" ? "secondary" : "ghost"
 								}
 								size="sm"
@@ -68,6 +119,37 @@ export function Navbar() {
 									</span>
 								</Link>
 							</Button>
+
+							{/* Streak indicator */}
+							<TooltipProvider delayDuration={200}>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<div
+											className={`flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium transition-colors ${
+												streak > 0
+													? "text-orange-500"
+													: "text-muted-foreground"
+											}`}
+										>
+											<Flame
+												className={`h-4 w-4 ${streak > 0 ? "text-orange-500" : ""}`}
+											/>
+											<span className="tabular-nums">
+												{streak}
+											</span>
+										</div>
+									</TooltipTrigger>
+									<TooltipContent>
+										<p>
+											{streak} {t("nav.streak")}
+										</p>
+										<p className="text-xs text-muted-foreground">
+											×{(1 + streak * 0.1).toFixed(1)}{" "}
+											{t("leaderboard.multiplier").toLowerCase()}
+										</p>
+									</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</>
 					)}
 					{!user && (
