@@ -7,7 +7,7 @@ import { useLanguage } from "@/lib/language-context";
 import { ThemeToggle } from "./theme-toggle";
 import { LanguageToggle } from "./language-toggle";
 import { Button } from "@/components/ui/button";
-import { BookOpen, LogOut, LayoutDashboard, Home, Info } from "lucide-react";
+import { LogOut, LayoutDashboard, Home, Info } from "lucide-react";
 
 export function Navbar() {
 	const { user, signOut } = useAuth();
@@ -27,7 +27,11 @@ export function Navbar() {
 					href={user ? "/dashboard" : "/"}
 					className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
 				>
-					<BookOpen className="h-5 w-5 text-primary" />
+					<img
+						src="https://yelritsuffubrssyujmu.supabase.co/storage/v1/object/public/tituprep/public/logo.svg"
+						alt="TituPrep logo"
+						className="h-6 w-6"
+					/>
 					<span className="font-semibold text-lg">TituPrep</span>
 				</Link>
 

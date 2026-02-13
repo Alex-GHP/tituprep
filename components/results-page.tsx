@@ -17,6 +17,7 @@ import {
 	RotateCcw,
 	LayoutDashboard,
 } from "lucide-react";
+import { getQuestionImageUrl } from "@/lib/question-images";
 
 interface QuestionData {
 	id: string;
@@ -249,6 +250,7 @@ export function ResultsPage({
 
 					const { textParts, codeBlocks } =
 						parseQuestionContent(questionText);
+					const questionImageUrl = getQuestionImageUrl(q.questionEn, q.questionRo, q.subjectId);
 
 					return (
 						<AccordionItem
@@ -289,6 +291,16 @@ export function ResultsPage({
 											)}
 										</span>
 									))}
+
+									{questionImageUrl && (
+										<div className="mt-3 mb-2">
+											<img
+												src={questionImageUrl}
+												alt="Question figure"
+												className="max-w-full rounded-lg border border-border"
+											/>
+										</div>
+									)}
 
 									<div className="mt-4 flex flex-col gap-2">
 										{selectedOption !== null && (

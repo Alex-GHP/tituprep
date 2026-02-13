@@ -22,6 +22,7 @@ import {
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { ChevronLeft, ChevronRight, Clock, Send, BookOpen } from "lucide-react";
+import { getQuestionImageUrl } from "@/lib/question-images";
 
 interface QuestionData {
 	id: string;
@@ -197,6 +198,7 @@ export function ExamPage({
 	const options =
 		language === "en" ? question.optionsEn : question.optionsRo;
 	const { textParts, codeBlocks } = parseQuestionContent(questionText);
+	const questionImageUrl = getQuestionImageUrl(question.questionEn, question.questionRo, question.subjectId);
 
 	return (
 		<main className="mx-auto max-w-3xl px-4 py-6 md:py-10">
@@ -277,6 +279,16 @@ export function ExamPage({
 							)}
 						</span>
 					))}
+
+					{questionImageUrl && (
+						<div className="mt-4 mb-2">
+							<img
+								src={questionImageUrl}
+								alt="Question figure"
+								className="max-w-full rounded-lg border border-border"
+							/>
+						</div>
+					)}
 
 					<RadioGroup
 						className="mt-6 flex flex-col gap-3"

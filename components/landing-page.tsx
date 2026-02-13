@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
-	BookOpen,
 	Code2,
 	Timer,
 	BarChart3,
@@ -33,7 +32,11 @@ export function LandingPage() {
 			<section className="w-full px-4 pt-20 pb-16 md:pt-32 md:pb-24">
 				<div className="mx-auto max-w-3xl text-center">
 					<div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
-						<BookOpen className="h-4 w-4" />
+						<img
+							src="https://yelritsuffubrssyujmu.supabase.co/storage/v1/object/public/tituprep/public/logo.svg"
+							alt="TituPrep logo"
+							className="h-4 w-4"
+						/>
 						<span>Practice Exam Platform</span>
 					</div>
 					<h1 className="text-balance text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl">

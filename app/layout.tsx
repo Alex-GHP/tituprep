@@ -17,6 +17,9 @@ export const metadata: Metadata = {
 	title: "TituPrep - Practice Exam Platform",
 	description:
 		"Master your CS exams with timed practice tests and subject-based training.",
+	icons: {
+		icon: "https://yelritsuffubrssyujmu.supabase.co/storage/v1/object/public/tituprep/public/logo.svg",
+	},
 };
 
 export const viewport: Viewport = {
