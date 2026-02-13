@@ -105,7 +105,7 @@ export function LandingPage() {
 			</section>
 
 			{/* Developer Spotlight */}
-			<section className="w-full px-4 pb-16">
+			{/* <section className="w-full px-4 pb-16">
 				<div className="mx-auto max-w-2xl">
 					<Card className="bg-card border-border">
 						<CardContent className="p-6 md:p-8">
@@ -118,7 +118,7 @@ export function LandingPage() {
 						</CardContent>
 					</Card>
 				</div>
-			</section>
+			</section> */}
 
 			<Separator className="mx-auto max-w-sm" />
 

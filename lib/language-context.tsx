@@ -18,10 +18,10 @@ interface Translations {
 
 const translations: Translations = {
 	// Landing / Hero
-	"hero.title": { en: "Master Your Exams", ro: "Stapaneste Examenele" },
+	"hero.title": { en: "Master Your Exams", ro: "Master Your Exams" },
 	"hero.subtitle": {
 		en: "Practice smarter with timed exams and subject-based training for programming fundamentals.",
-		ro: "Exerseaza mai inteligent cu examene cronometrate si antrenament pe materii.",
+		ro: "Practice smarter with timed exams and subject-based training for programming fundamentals.",
 	},
 	"hero.cta": { en: "Get Started", ro: "Incepe Acum" },
 	"hero.spotlight": {
@@ -58,7 +58,7 @@ const translations: Translations = {
 	"auth.signIn": { en: "Sign in to get started", ro: "Conecteaza-te pentru a incepe" },
 
 	// Dashboard
-	"dash.title": { en: "Dashboard", ro: "Panou de Control" },
+	"dash.title": { en: "Dashboard", ro: "Dashboard" },
 	"dash.subtitle": {
 		en: "Select an exam or subject to begin practicing.",
 		ro: "Selecteaza un examen sau o materie pentru a incepe.",
@@ -68,7 +68,7 @@ const translations: Translations = {
 		en: "Subject Training",
 		ro: "Antrenament pe Materii",
 	},
-	"dash.exam": { en: "Exam", ro: "Examen" },
+	"dash.exam": { en: "Exam", ro: "Exam" },
 	"dash.bestScore": { en: "Best Score", ro: "Cel Mai Bun Scor" },
 	"dash.notAttempted": { en: "Not attempted", ro: "Neinceput" },
 	"dash.questions": { en: "questions", ro: "intrebari" },
@@ -91,7 +91,7 @@ const translations: Translations = {
 	"exam.submit": { en: "Submit Exam", ro: "Trimite Examenul" },
 	"exam.cancel": { en: "Cancel", ro: "Anuleaza" },
 	"exam.timeRemaining": { en: "Time Remaining", ro: "Timp Ramas" },
-	"exam.studyMode": { en: "Study Mode", ro: "Mod Studiu" },
+	"exam.studyMode": { en: "Study Mode", ro: "Study Mode" },
 	"exam.studyModeDesc": {
 		en: "No timer, learn at your own pace",
 		ro: "Fara cronometru, invata in ritmul tau",
@@ -119,12 +119,12 @@ const translations: Translations = {
 	"results.correctAnswer": { en: "Correct answer", ro: "Raspunsul corect" },
 	"results.backToDashboard": {
 		en: "Back to Dashboard",
-		ro: "Inapoi la Panou",
+		ro: "Inapoi la Dashboard",
 	},
 	"results.retake": { en: "Retake Exam", ro: "Reincepe Examenul" },
 
 	// About
-	"about.title": { en: "About", ro: "Despre" },
+	"about.title": { en: "About", ro: "About" },
 	"about.bio": {
 		en: "A passionate developer building tools for CS students.",
 		ro: "Un dezvoltator pasionat care creaza unelte pentru studentii de informatica.",
@@ -139,19 +139,23 @@ const translations: Translations = {
 	},
 	"about.connect": { en: "Connect", ro: "Contact" },
 	"about.technologies": { en: "Technologies", ro: "Tehnologii" },
-	"about.portfolio": { en: "Portfolio", ro: "Portofoliu" },
+	"about.portfolio": { en: "Website", ro: "Website" },
+	"about.support": { en: "Support", ro: "Sustinere" },
+	"about.supportDesc": { en: "My own money were and are used to develop and maintain this project (domain, hosting, storage, etc.). Please do not feel obligated, but support is highly appreciated.", ro: "Banii mei proprii au fost si sunt folositi pentru a dezvolta si mentine acest proiect (domain, hosting, storage, etc.). Te rog nu te simti obligat, dar sustinerea este foarte apreciata." },
+	"about.contributions": { en: "Contribute", ro: "Contribuie" },
+	"about.contributionsDesc": { en: "This project was developed by a Titu student for Titu students. Contributions are more than welcomed", ro: "Acest proiect a fost dezvoltat de un student Titu pentru studentii Titu. Contributiile sunt mai mult decât binevenite" },
 
 	// Nav
-	"nav.home": { en: "Home", ro: "Acasa" },
-	"nav.dashboard": { en: "Dashboard", ro: "Panou" },
-	"nav.about": { en: "About", ro: "Despre" },
+	"nav.home": { en: "Home", ro: "Home" },
+	"nav.dashboard": { en: "Dashboard", ro: "Dashboard" },
+	"nav.about": { en: "About", ro: "About" },
 	"nav.signOut": { en: "Sign Out", ro: "Deconecteaza-te" },
 
 	// Common
-	"common.darkMode": { en: "Dark Mode", ro: "Mod Inchis" },
-	"common.lightMode": { en: "Light Mode", ro: "Mod Deschis" },
-	"common.language": { en: "Language", ro: "Limba" },
-	"common.loading": { en: "Loading...", ro: "Se incarca..." },
+	"common.darkMode": { en: "Dark Mode", ro: "Dark Mode" },
+	"common.lightMode": { en: "Light Mode", ro: "Light Mode" },
+	"common.language": { en: "Language", ro: "Language" },
+	"common.loading": { en: "Loading...", ro: "Loading..." },
 };
 
 interface LanguageContextType {
@@ -172,14 +176,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 	// Load preferred language from profile on mount
 	useEffect(() => {
 		if (!user) return;
-		supabase
+		(supabase
 			.from("profiles")
 			.select("preferred_language")
 			.eq("id", user.id)
-			.single()
+			.single() as unknown as Promise<{ data: { preferred_language: Language } | null }>)
 			.then(({ data }) => {
 				if (data?.preferred_language) {
-					setLanguageState(data.preferred_language as Language);
+					setLanguageState(data.preferred_language);
 				}
 			});
 	}, [user, supabase]);
@@ -194,9 +198,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 			setLanguageState(lang);
 			// Persist to profile if logged in
 			if (user) {
-				supabase
-					.from("profiles")
-					.update({ preferred_language: lang })
+				(supabase
+					.from("profiles") as ReturnType<typeof supabase.from>)
+					.update({ preferred_language: lang } as Record<string, unknown>)
 					.eq("id", user.id)
 					.then(() => {});
 			}

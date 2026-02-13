@@ -4,20 +4,16 @@ import { useLanguage } from "@/lib/language-context";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Github, Linkedin, Globe, Mail } from "lucide-react";
+import { Github, Linkedin, Globe, Mail, FileUser, Banknote } from "lucide-react";
 
 export function AboutPage() {
 	const { t } = useLanguage();
 
 	return (
 		<main className="mx-auto max-w-2xl px-4 py-8 md:py-12">
-			<h1 className="text-2xl font-bold text-foreground md:text-3xl">
-				{t("about.title")}
-			</h1>
-
 			<Card className="mt-6 bg-card border-border">
 				<CardContent className="p-6 md:p-8">
-					<div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+					{/* <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
 						<div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
 							<span className="text-2xl font-bold">CS</span>
 						</div>
@@ -34,9 +30,9 @@ export function AboutPage() {
 								{t("about.bio")}
 							</p>
 						</div>
-					</div>
+					</div> */}
 
-					<Separator className="my-6" />
+					{/* <Separator className="my-6" /> */}
 
 					<div className="flex flex-col gap-3">
 						<h3 className="text-sm font-semibold text-card-foreground uppercase tracking-wider">
@@ -50,7 +46,7 @@ export function AboutPage() {
 								asChild
 							>
 								<a
-									href="https://github.com"
+									href="https://github.com/Alex-GHP/"
 									target="_blank"
 									rel="noopener noreferrer"
 								>
@@ -65,7 +61,7 @@ export function AboutPage() {
 								asChild
 							>
 								<a
-									href="https://linkedin.com"
+									href="https://www.linkedin.com/in/alexandru-gabriel-morariu-8657b0289/"
 									target="_blank"
 									rel="noopener noreferrer"
 								>
@@ -80,7 +76,7 @@ export function AboutPage() {
 								asChild
 							>
 								<a
-									href="https://example.com"
+									href="https://tituprep.ro/"
 									target="_blank"
 									rel="noopener noreferrer"
 								>
@@ -94,9 +90,20 @@ export function AboutPage() {
 								className="gap-2 border-border text-foreground hover:bg-secondary"
 								asChild
 							>
-								<a href="mailto:student@example.com">
+								<a href="mailto:alex.morariu.dev@gmail.com">
 									<Mail className="h-4 w-4" />
 									Email
+								</a>
+							</Button>
+							<Button
+								variant="outline"
+								size="sm"
+								className="gap-2 border-border text-foreground hover:bg-secondary"
+								asChild
+							>
+								<a href="https://drive.google.com/file/d/1dWtuja85suIptdufKW6u7SZSLLtx4pzs/view" target="_blank" rel="noopener noreferrer">
+									<FileUser className="h-4 w-4" />
+									Resume
 								</a>
 							</Button>
 						</div>
@@ -106,27 +113,38 @@ export function AboutPage() {
 
 					<div className="flex flex-col gap-3">
 						<h3 className="text-sm font-semibold text-card-foreground uppercase tracking-wider">
-							{t("about.technologies")}
+							{t("about.support")}
 						</h3>
-						<div className="flex flex-wrap gap-2">
-							{[
-								"React",
-								"Next.js",
-								"TypeScript",
-								"Tailwind CSS",
-								"Supabase",
-								"Python",
-								"C++",
-								"PostgreSQL",
-							].map((tech) => (
-								<span
-									key={tech}
-									className="rounded-md bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
-								>
-									{tech}
-								</span>
-							))}
-						</div>
+						<p className="text-sm text-muted-foreground">{t("about.supportDesc")}</p>
+						<Button
+							variant="outline"
+							size="sm"
+							className="gap-2 border-border text-foreground hover:bg-secondary"
+							asChild
+						>
+							<a href="https://revolut.me/agmora/" target="_blank" rel="noopener noreferrer">
+								<Banknote className="h-4 w-4" />
+								Revolut</a>
+						</Button>
+					</div>
+
+					<Separator className="my-6" />
+
+					<div className="flex flex-col gap-3">
+						<h3 className="text-sm font-semibold text-card-foreground uppercase tracking-wider">
+							{t("about.contributions")}
+						</h3>
+						<p className="text-sm text-muted-foreground">{t("about.contributionsDesc")}</p>
+						<Button
+							variant="outline"
+							size="sm"
+							className="gap-2 border-border text-foreground hover:bg-secondary"
+							asChild
+						>
+							<a href="https://github.com/Alex-GHP/tituprep/" target="_blank" rel="noopener noreferrer">
+								<Github className="h-4 w-4" />
+								Repository</a>
+						</Button>
 					</div>
 				</CardContent>
 			</Card>

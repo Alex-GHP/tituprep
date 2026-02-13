@@ -1,69 +1,92 @@
 import { createClient } from "@/lib/supabase/server";
 import { DashboardPage } from "@/components/dashboard-page";
 
+interface StandardExamRow {
+	id: string;
+	exam_number: number | null;
+	title_en: string | null;
+	title_ro: string | null;
+	exam_questions: { count: number }[];
+}
+
+interface SubjectExamRow {
+	id: string;
+	subject_id: string | null;
+	title_en: string | null;
+	title_ro: string | null;
+	subjects: {
+		id: string;
+		name_en: string;
+		name_ro: string;
+		module: string | null;
+	} | null;
+	exam_questions: { count: number }[];
+}
+
+interface AttemptRow {
+	exam_id: string;
+	score: number;
+}
+
 export default async function Page() {
 	const supabase = await createClient();
 	const {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	// Fetch standard exams (the 20 practice exams)
-	const { data: standardExams } = await supabase
+	// Fetch standard exams with embedded question counts
+	const { data: standardExamsRaw } = await supabase
 		.from("exams")
-		.select("id, exam_number, title_en, title_ro")
+		.select("id, exam_number, title_en, title_ro, exam_questions(count)")
 		.eq("type", "standard")
 		.order("exam_number");
 
-	// Fetch subject exams
-	const { data: subjectExams } = await supabase
+	const standardExams = (standardExamsRaw ?? []) as unknown as StandardExamRow[];
+
+	// Fetch subject exams with embedded question counts
+	const { data: subjectExamsRaw } = await supabase
 		.from("exams")
-		.select("id, subject_id, title_en, title_ro, subjects(id, name_en, name_ro, module)")
+		.select(
+			"id, subject_id, title_en, title_ro, subjects(id, name_en, name_ro, module), exam_questions(count)",
+		)
 		.eq("type", "subject")
 		.order("subject_id");
 
-	// Fetch question counts per exam
-	const { data: examQuestionCounts } = await supabase
-		.from("exam_questions")
-		.select("exam_id, question_id");
+	const subjectExams = (subjectExamsRaw ?? []) as unknown as SubjectExamRow[];
 
 	// Fetch user's best scores per exam
-	const { data: userAttempts } = await supabase
+	const { data: userAttemptsRaw } = await supabase
 		.from("user_attempts")
 		.select("exam_id, score")
 		.eq("user_id", user!.id)
 		.order("score", { ascending: false });
 
+	const userAttempts = (userAttemptsRaw ?? []) as unknown as AttemptRow[];
+
 	// Build best scores map: exam_id -> best score
 	const bestScores: Record<string, number> = {};
-	for (const attempt of userAttempts ?? []) {
+	for (const attempt of userAttempts) {
 		if (!(attempt.exam_id in bestScores)) {
 			bestScores[attempt.exam_id] = attempt.score;
 		}
 	}
 
-	// Build question count map: exam_id -> count
-	const questionCounts: Record<string, number> = {};
-	for (const eq of examQuestionCounts ?? []) {
-		questionCounts[eq.exam_id] = (questionCounts[eq.exam_id] ?? 0) + 1;
-	}
-
 	return (
 		<DashboardPage
-			standardExams={(standardExams ?? []).map((e) => ({
-				id: e.id,
-				examNumber: e.exam_number!,
-				titleEn: e.title_en ?? `Exam #${e.exam_number}`,
-				titleRo: e.title_ro ?? `Examen #${e.exam_number}`,
-				bestScore: bestScores[e.id] ?? null,
-				questionCount: questionCounts[e.id] ?? 0,
-			}))}
-			subjectExams={(subjectExams ?? []).map((e) => {
-				const subject = e.subjects as unknown as {
-					id: string;
-					name_en: string;
-					name_ro: string;
-					module: string | null;
+			standardExams={standardExams.map((e) => {
+				const eqCount = e.exam_questions?.[0]?.count ?? 0;
+				return {
+					id: e.id,
+					examNumber: e.exam_number!,
+					titleEn: e.title_en ?? `Exam #${e.exam_number}`,
+					titleRo: e.title_ro ?? `Examen #${e.exam_number}`,
+					bestScore: bestScores[e.id] ?? null,
+					questionCount: eqCount,
 				};
+			})}
+			subjectExams={subjectExams.map((e) => {
+				const subject = e.subjects;
+				const eqCount = e.exam_questions?.[0]?.count ?? 0;
 				return {
 					id: e.id,
 					subjectId: e.subject_id!,
@@ -71,7 +94,7 @@ export default async function Page() {
 					nameRo: subject?.name_ro ?? e.subject_id ?? "",
 					module: subject?.module ?? null,
 					bestScore: bestScores[e.id] ?? null,
-					questionCount: questionCounts[e.id] ?? 0,
+					questionCount: eqCount,
 				};
 			})}
 		/>
