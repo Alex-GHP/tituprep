@@ -8,9 +8,9 @@
  * 3. Subject exams (inserts questions + subject exams)
  */
 
-import { seedSubjects } from "./seed-subjects";
 import { seedPracticeExams } from "./seed-practice-exams";
 import { seedSubjectExams } from "./seed-subject-exams";
+import { seedSubjects } from "./seed-subjects";
 
 async function main() {
 	console.log("=== TituPrep Database Seeder ===\n");

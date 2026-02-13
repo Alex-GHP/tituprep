@@ -1,14 +1,14 @@
 "use client";
 
+import type { User } from "@supabase/supabase-js";
 import {
 	createContext,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
-	useCallback,
 } from "react";
 import { createClient } from "./client";
-import type { User } from "@supabase/supabase-js";
 
 interface AuthContextType {
 	user: User | null;

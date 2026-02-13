@@ -1,14 +1,15 @@
 "use client";
 
-import React, {
+import type React from "react";
+import {
 	createContext,
-	useContext,
-	useState,
 	useCallback,
+	useContext,
 	useEffect,
+	useState,
 } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/supabase/auth-provider";
+import { createClient } from "@/lib/supabase/client";
 
 type Language = "en" | "ro";
 
@@ -55,7 +56,10 @@ const translations: Translations = {
 
 	// Auth
 	"auth.github": { en: "Continue with GitHub", ro: "Continua cu GitHub" },
-	"auth.signIn": { en: "Sign in to get started", ro: "Conecteaza-te pentru a incepe" },
+	"auth.signIn": {
+		en: "Sign in to get started",
+		ro: "Conecteaza-te pentru a incepe",
+	},
 
 	// Dashboard
 	"dash.title": { en: "Dashboard", ro: "Dashboard" },
@@ -141,9 +145,15 @@ const translations: Translations = {
 	"about.technologies": { en: "Technologies", ro: "Tehnologii" },
 	"about.portfolio": { en: "Website", ro: "Website" },
 	"about.support": { en: "Support", ro: "Sustinere" },
-	"about.supportDesc": { en: "My own money were and are used to develop and maintain this project (domain, hosting, storage, etc.). Please do not feel obligated, but support is highly appreciated.", ro: "Banii mei proprii au fost si sunt folositi pentru a dezvolta si mentine acest proiect (domain, hosting, storage, etc.). Te rog nu te simti obligat, dar sustinerea este foarte apreciata." },
+	"about.supportDesc": {
+		en: "My own money were and are used to develop and maintain this project (domain, hosting, storage, etc.). Please do not feel obligated, but support is highly appreciated.",
+		ro: "Banii mei proprii au fost si sunt folositi pentru a dezvolta si mentine acest proiect (domain, hosting, storage, etc.). Te rog nu te simti obligat, dar sustinerea este foarte apreciata.",
+	},
 	"about.contributions": { en: "Contribute", ro: "Contribuie" },
-	"about.contributionsDesc": { en: "This project was developed by a Titu student for Titu students. Contributions are more than welcomed", ro: "Acest proiect a fost dezvoltat de un student Titu pentru studentii Titu. Contributiile sunt mai mult decât binevenite" },
+	"about.contributionsDesc": {
+		en: "This project was developed by a Titu student for Titu students. Contributions are more than welcomed",
+		ro: "Acest proiect a fost dezvoltat de un student Titu pentru studentii Titu. Contributiile sunt mai mult decât binevenite",
+	},
 
 	// Nav
 	"nav.home": { en: "Home", ro: "Home" },
@@ -171,7 +181,10 @@ const translations: Translations = {
 	"leaderboard.you": { en: "You", ro: "Tu" },
 	"leaderboard.dayStreak": { en: "day streak", ro: "zile consecutive" },
 	"leaderboard.base": { en: "base", ro: "baza" },
-	"leaderboard.howItWorks": { en: "How scoring works:", ro: "Cum functioneaza scorul:" },
+	"leaderboard.howItWorks": {
+		en: "How scoring works:",
+		ro: "Cum functioneaza scorul:",
+	},
 	"leaderboard.howItWorksDesc": {
 		en: "Your leaderboard score is the sum of all your exam scores multiplied by your streak bonus. Each consecutive day you complete an exam adds ×0.1 to your multiplier.",
 		ro: "Scorul tau in clasament este suma tuturor scorurilor tale la examene, inmultita cu bonusul de obitnut prin daily streak. Fiecare zi consecutiva in care completezi un examen adauga ×0.1 la multiplicator.",
@@ -202,16 +215,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 	// Load preferred language from profile on mount
 	useEffect(() => {
 		if (!user) return;
-		(supabase
-			.from("profiles")
-			.select("preferred_language")
-			.eq("id", user.id)
-			.single() as unknown as Promise<{ data: { preferred_language: Language } | null }>)
-			.then(({ data }) => {
-				if (data?.preferred_language) {
-					setLanguageState(data.preferred_language);
-				}
-			});
+		(
+			supabase
+				.from("profiles")
+				.select("preferred_language")
+				.eq("id", user.id)
+				.single() as unknown as Promise<{
+				data: { preferred_language: Language } | null;
+			}>
+		).then(({ data }) => {
+			if (data?.preferred_language) {
+				setLanguageState(data.preferred_language);
+			}
+		});
 	}, [user, supabase]);
 
 	// Update <html lang> attribute when language changes
@@ -224,8 +240,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 			setLanguageState(lang);
 			// Persist to profile if logged in
 			if (user) {
-				(supabase
-					.from("profiles") as ReturnType<typeof supabase.from>)
+				(supabase.from("profiles") as ReturnType<typeof supabase.from>)
 					.update({ preferred_language: lang } as Record<string, unknown>)
 					.eq("id", user.id)
 					.then(() => {});

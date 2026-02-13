@@ -4,10 +4,10 @@
  * then linked via exam_questions.
  */
 
-import { supabase } from "./supabase-admin";
-import { normalizeSubjectSlug } from "./seed-subjects";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { normalizeSubjectSlug } from "./seed-subjects";
+import { supabase } from "./supabase-admin";
 
 interface PracticeExamQuestion {
 	ro: {
@@ -44,9 +44,7 @@ export async function seedPracticeExams() {
 	let totalQuestions = 0;
 
 	for (const exam of data.practice_exams) {
-		console.log(
-			`  Exam #${exam.exam_id}: ${exam.questions.length} questions`,
-		);
+		console.log(`  Exam #${exam.exam_id}: ${exam.questions.length} questions`);
 
 		// Insert all questions for this exam
 		const questionsToInsert = exam.questions.map((q) => ({
@@ -94,10 +92,7 @@ export async function seedPracticeExams() {
 			.single();
 
 		if (examError || !examRow) {
-			console.error(
-				`  Error creating exam #${exam.exam_id}:`,
-				examError,
-			);
+			console.error(`  Error creating exam #${exam.exam_id}:`, examError);
 			throw examError;
 		}
 

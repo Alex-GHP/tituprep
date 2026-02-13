@@ -1,15 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { BookOpen, ChevronLeft, ChevronRight, Clock, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLanguage } from "@/lib/language-context";
-import { submitExamAttempt } from "@/lib/actions";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -21,7 +14,14 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ChevronLeft, ChevronRight, Clock, Send, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
+import { submitExamAttempt } from "@/lib/actions";
+import { useLanguage } from "@/lib/language-context";
 import { getQuestionImageUrl } from "@/lib/question-images";
 
 interface QuestionData {
@@ -64,7 +64,7 @@ function seededShuffle<T>(array: T[], seed: string): T[] {
 	}
 	for (let i = shuffled.length - 1; i > 0; i--) {
 		hash = (hash * 1664525 + 1013904223) | 0;
-		const j = ((hash >>> 0) % (i + 1));
+		const j = (hash >>> 0) % (i + 1);
 		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
 	}
 	return shuffled;
@@ -147,25 +147,6 @@ export function ExamPage({
 	const unansweredCount = answers.filter((a) => a === null).length;
 	const progressValue = ((currentIndex + 1) / totalQuestions) * 100;
 
-	// Timer
-	useEffect(() => {
-		if (studyMode || !isTimedExam) return;
-		if (timeLeft <= 0) {
-			handleSubmit();
-			return;
-		}
-		const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-		return () => clearInterval(interval);
-	}, [timeLeft, studyMode, isTimedExam]);
-
-	const selectAnswer = (optionIndex: number) => {
-		setAnswers((prev) => {
-			const next = [...prev];
-			next[currentIndex] = optionIndex;
-			return next;
-		});
-	};
-
 	const handleSubmit = useCallback(async () => {
 		if (submitting) return;
 		setSubmitting(true);
@@ -191,14 +172,36 @@ export function ExamPage({
 		}
 	}, [answers, shuffledQuestions, examId, submitting, startTime, router]);
 
+	// Timer
+	useEffect(() => {
+		if (studyMode || !isTimedExam) return;
+		if (timeLeft <= 0) {
+			handleSubmit();
+			return;
+		}
+		const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+		return () => clearInterval(interval);
+	}, [timeLeft, studyMode, isTimedExam, handleSubmit]);
+
+	const selectAnswer = (optionIndex: number) => {
+		setAnswers((prev) => {
+			const next = [...prev];
+			next[currentIndex] = optionIndex;
+			return next;
+		});
+	};
+
 	if (!question) return null;
 
 	const questionText =
 		language === "en" ? question.questionEn : question.questionRo;
-	const options =
-		language === "en" ? question.optionsEn : question.optionsRo;
+	const options = language === "en" ? question.optionsEn : question.optionsRo;
 	const { textParts, codeBlocks } = parseQuestionContent(questionText);
-	const questionImageUrl = getQuestionImageUrl(question.questionEn, question.questionRo, question.subjectId);
+	const questionImageUrl = getQuestionImageUrl(
+		question.questionEn,
+		question.questionRo,
+		question.subjectId,
+	);
 
 	return (
 		<main className="mx-auto max-w-3xl px-4 py-6 md:py-10">
@@ -293,7 +296,7 @@ export function ExamPage({
 					<RadioGroup
 						className="mt-6 flex flex-col gap-3"
 						value={answers[currentIndex]?.toString() ?? ""}
-						onValueChange={(val) => selectAnswer(Number.parseInt(val))}
+						onValueChange={(val) => selectAnswer(Number.parseInt(val, 10))}
 					>
 						{options.map((option, optIdx) => {
 							const optionContent = parseQuestionContent(option);
@@ -324,9 +327,7 @@ export function ExamPage({
 													)}
 													{optionContent.codeBlocks[pIdx] && (
 														<pre className="mt-1 mb-1 overflow-x-auto rounded bg-secondary p-2 text-xs font-mono leading-relaxed text-foreground">
-															<code>
-																{optionContent.codeBlocks[pIdx].code}
-															</code>
+															<code>{optionContent.codeBlocks[pIdx].code}</code>
 														</pre>
 													)}
 												</span>
@@ -357,9 +358,7 @@ export function ExamPage({
 				{currentIndex < totalQuestions - 1 ? (
 					<Button
 						onClick={() =>
-							setCurrentIndex((prev) =>
-								Math.min(totalQuestions - 1, prev + 1),
-							)
+							setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1))
 						}
 						className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
 					>

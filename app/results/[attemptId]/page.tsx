@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { ResultsPage } from "@/components/results-page";
+import { createClient } from "@/lib/supabase/server";
 
 interface PageProps {
 	params: Promise<{ attemptId: string }>;

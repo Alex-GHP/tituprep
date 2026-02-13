@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import type { AnswerRecord } from "@/lib/supabase/types";
 
 /**
  * Generate a random 35-question exam with balanced subject distribution.
@@ -92,7 +92,11 @@ export async function generateRandomExam(): Promise<string | null> {
  */
 export async function submitExamAttempt(params: {
 	examId: string;
-	answers: { questionId: string; selectedIndex: number | null; correct: boolean }[];
+	answers: {
+		questionId: string;
+		selectedIndex: number | null;
+		correct: boolean;
+	}[];
 	timeTakenSeconds: number | null;
 }): Promise<string | null> {
 	const supabase = await createClient();
@@ -103,8 +107,7 @@ export async function submitExamAttempt(params: {
 
 	const totalQuestions = params.answers.length;
 	const correctCount = params.answers.filter((a) => a.correct).length;
-	const score =
-		Math.round((correctCount / totalQuestions) * 10 * 10) / 10;
+	const score = Math.round((correctCount / totalQuestions) * 10 * 10) / 10;
 
 	const { data: attempt, error } = await supabase
 		.from("user_attempts")
@@ -114,7 +117,7 @@ export async function submitExamAttempt(params: {
 			score,
 			total_questions: totalQuestions,
 			correct_count: correctCount,
-			answers: params.answers as unknown as Record<string, unknown>[],
+			answers: params.answers as unknown as AnswerRecord[],
 			time_taken_seconds: params.timeTakenSeconds,
 		})
 		.select("id")
@@ -157,7 +160,7 @@ async function updateStreak(
 	let newStreak = 1; // default: reset
 
 	if (profile.last_active_date) {
-		const lastDate = new Date(profile.last_active_date);
+		const _lastDate = new Date(profile.last_active_date);
 		const yesterday = new Date(today);
 		yesterday.setDate(yesterday.getDate() - 1);
 		const yesterdayStr = yesterday.toISOString().split("T")[0];

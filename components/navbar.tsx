@@ -1,28 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useAuth } from "@/lib/supabase/auth-provider";
-import { createClient } from "@/lib/supabase/client";
-import { useLanguage } from "@/lib/language-context";
-import { ThemeToggle } from "./theme-toggle";
-import { LanguageToggle } from "./language-toggle";
-import { Button } from "@/components/ui/button";
 import {
-	LogOut,
-	LayoutDashboard,
+	Flame,
 	Home,
 	Info,
+	LayoutDashboard,
+	LogOut,
 	Trophy,
-	Flame,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useLanguage } from "@/lib/language-context";
+import { useAuth } from "@/lib/supabase/auth-provider";
+import { createClient } from "@/lib/supabase/client";
+import { LanguageToggle } from "./language-toggle";
+import { ThemeToggle } from "./theme-toggle";
 
 export function Navbar() {
 	const { user, signOut } = useAuth();
@@ -38,13 +38,15 @@ export function Navbar() {
 			return;
 		}
 		const supabase = createClient();
-		(supabase
-			.from("profiles")
-			.select("streak_count")
-			.eq("id", user.id)
-			.single() as unknown as Promise<{
-			data: { streak_count: number } | null;
-		}>).then(({ data }) => {
+		(
+			supabase
+				.from("profiles")
+				.select("streak_count")
+				.eq("id", user.id)
+				.single() as unknown as Promise<{
+				data: { streak_count: number } | null;
+			}>
+		).then(({ data }) => {
 			if (data) setStreak(data.streak_count);
 		});
 	}, [user]);
@@ -73,26 +75,18 @@ export function Navbar() {
 					{user && (
 						<>
 							<Button
-								variant={
-									pathname === "/dashboard" ? "secondary" : "ghost"
-								}
+								variant={pathname === "/dashboard" ? "secondary" : "ghost"}
 								size="sm"
 								asChild
 								className="gap-1.5 text-foreground"
 							>
 								<Link href="/dashboard">
 									<LayoutDashboard className="h-4 w-4" />
-									<span className="hidden sm:inline">
-										{t("nav.dashboard")}
-									</span>
+									<span className="hidden sm:inline">{t("nav.dashboard")}</span>
 								</Link>
 							</Button>
 							<Button
-								variant={
-									pathname === "/leaderboard"
-										? "secondary"
-										: "ghost"
-								}
+								variant={pathname === "/leaderboard" ? "secondary" : "ghost"}
 								size="sm"
 								asChild
 								className="gap-1.5 text-foreground"
@@ -105,18 +99,14 @@ export function Navbar() {
 								</Link>
 							</Button>
 							<Button
-								variant={
-									pathname === "/about" ? "secondary" : "ghost"
-								}
+								variant={pathname === "/about" ? "secondary" : "ghost"}
 								size="sm"
 								asChild
 								className="gap-1.5 text-foreground"
 							>
 								<Link href="/about">
 									<Info className="h-4 w-4" />
-									<span className="hidden sm:inline">
-										{t("nav.about")}
-									</span>
+									<span className="hidden sm:inline">{t("nav.about")}</span>
 								</Link>
 							</Button>
 
@@ -126,17 +116,13 @@ export function Navbar() {
 									<TooltipTrigger asChild>
 										<div
 											className={`flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium transition-colors ${
-												streak > 0
-													? "text-orange-500"
-													: "text-muted-foreground"
+												streak > 0 ? "text-orange-500" : "text-muted-foreground"
 											}`}
 										>
 											<Flame
 												className={`h-4 w-4 ${streak > 0 ? "text-orange-500" : ""}`}
 											/>
-											<span className="tabular-nums">
-												{streak}
-											</span>
+											<span className="tabular-nums">{streak}</span>
 										</div>
 									</TooltipTrigger>
 									<TooltipContent>
@@ -161,9 +147,7 @@ export function Navbar() {
 						>
 							<Link href="/">
 								<Home className="h-4 w-4" />
-								<span className="hidden sm:inline">
-									{t("nav.home")}
-								</span>
+								<span className="hidden sm:inline">{t("nav.home")}</span>
 							</Link>
 						</Button>
 					)}

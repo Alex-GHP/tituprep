@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import { AuthProvider } from "@/lib/supabase/auth-provider";
-import { LanguageProvider } from "@/lib/language-context";
 import { Navbar } from "@/components/navbar";
+import { LanguageProvider } from "@/lib/language-context";
+import { AuthProvider } from "@/lib/supabase/auth-provider";
 import { createClient } from "@/lib/supabase/server";
 import "./globals.css";
 
@@ -33,7 +33,9 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({
 	children,
-}: { children: React.ReactNode }) {
+}: {
+	children: React.ReactNode;
+}) {
 	const supabase = await createClient();
 	const {
 		data: { user },

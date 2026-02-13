@@ -4,8 +4,6 @@
  */
 
 import { supabase } from "./supabase-admin";
-import * as fs from "node:fs";
-import * as path from "node:path";
 
 // Canonical subject definitions with human-readable names
 const SUBJECTS: {

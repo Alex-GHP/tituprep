@@ -1,22 +1,22 @@
 "use client";
 
+import {
+	CheckCircle2,
+	LayoutDashboard,
+	RotateCcw,
+	XCircle,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useLanguage } from "@/lib/language-context";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-	CheckCircle2,
-	XCircle,
-	RotateCcw,
-	LayoutDashboard,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/lib/language-context";
 import { getQuestionImageUrl } from "@/lib/question-images";
 
 interface QuestionData {
@@ -219,20 +219,13 @@ export function ResultsPage({
 					const q = questions[idx];
 					if (!q) return null;
 
-					const questionText =
-						language === "en" ? q.questionEn : q.questionRo;
+					const questionText = language === "en" ? q.questionEn : q.questionRo;
 					const correctAnswer =
-						language === "en"
-							? q.correctAnswerEn
-							: q.correctAnswerRo;
+						language === "en" ? q.correctAnswerEn : q.correctAnswerRo;
 					const wrongAnswers =
-						language === "en"
-							? q.wrongAnswersEn
-							: q.wrongAnswersRo;
+						language === "en" ? q.wrongAnswersEn : q.wrongAnswersRo;
 					const explanation =
-						language === "en"
-							? q.explanationEn
-							: q.explanationRo;
+						language === "en" ? q.explanationEn : q.explanationRo;
 
 					// Reconstruct shuffled options to show what the user saw
 					const allOptions = [...wrongAnswers, correctAnswer];
@@ -241,16 +234,19 @@ export function ResultsPage({
 						q.id,
 					);
 					const shuffledOptions = indices.map((i) => allOptions[i]);
-					const correctIdx = indices.indexOf(allOptions.length - 1);
+					const _correctIdx = indices.indexOf(allOptions.length - 1);
 
 					const selectedOption =
 						answer.selectedIndex !== null
 							? shuffledOptions[answer.selectedIndex]
 							: null;
 
-					const { textParts, codeBlocks } =
-						parseQuestionContent(questionText);
-					const questionImageUrl = getQuestionImageUrl(q.questionEn, q.questionRo, q.subjectId);
+					const { textParts, codeBlocks } = parseQuestionContent(questionText);
+					const questionImageUrl = getQuestionImageUrl(
+						q.questionEn,
+						q.questionRo,
+						q.subjectId,
+					);
 
 					return (
 						<AccordionItem
@@ -306,9 +302,7 @@ export function ResultsPage({
 										{selectedOption !== null && (
 											<div className="flex items-start gap-2">
 												<Badge
-													variant={
-														answer.correct ? "default" : "destructive"
-													}
+													variant={answer.correct ? "default" : "destructive"}
 													className="text-xs shrink-0 mt-0.5"
 												>
 													{t("results.yourAnswer")}

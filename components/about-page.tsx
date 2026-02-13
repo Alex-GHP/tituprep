@@ -1,10 +1,17 @@
 "use client";
 
-import { useLanguage } from "@/lib/language-context";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+	Banknote,
+	FileUser,
+	Github,
+	Globe,
+	Linkedin,
+	Mail,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Github, Linkedin, Globe, Mail, FileUser, Banknote } from "lucide-react";
+import { useLanguage } from "@/lib/language-context";
 
 export function AboutPage() {
 	const { t } = useLanguage();
@@ -101,7 +108,11 @@ export function AboutPage() {
 								className="gap-2 border-border text-foreground hover:bg-secondary"
 								asChild
 							>
-								<a href="https://drive.google.com/file/d/1dWtuja85suIptdufKW6u7SZSLLtx4pzs/view" target="_blank" rel="noopener noreferrer">
+								<a
+									href="https://drive.google.com/file/d/1dWtuja85suIptdufKW6u7SZSLLtx4pzs/view"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
 									<FileUser className="h-4 w-4" />
 									Resume
 								</a>
@@ -115,16 +126,23 @@ export function AboutPage() {
 						<h3 className="text-sm font-semibold text-card-foreground uppercase tracking-wider">
 							{t("about.support")}
 						</h3>
-						<p className="text-sm text-muted-foreground">{t("about.supportDesc")}</p>
+						<p className="text-sm text-muted-foreground">
+							{t("about.supportDesc")}
+						</p>
 						<Button
 							variant="outline"
 							size="sm"
 							className="gap-2 border-border text-foreground hover:bg-secondary"
 							asChild
 						>
-							<a href="https://revolut.me/agmora/" target="_blank" rel="noopener noreferrer">
+							<a
+								href="https://revolut.me/agmora/"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
 								<Banknote className="h-4 w-4" />
-								Revolut</a>
+								Revolut
+							</a>
 						</Button>
 					</div>
 
@@ -134,16 +152,23 @@ export function AboutPage() {
 						<h3 className="text-sm font-semibold text-card-foreground uppercase tracking-wider">
 							{t("about.contributions")}
 						</h3>
-						<p className="text-sm text-muted-foreground">{t("about.contributionsDesc")}</p>
+						<p className="text-sm text-muted-foreground">
+							{t("about.contributionsDesc")}
+						</p>
 						<Button
 							variant="outline"
 							size="sm"
 							className="gap-2 border-border text-foreground hover:bg-secondary"
 							asChild
 						>
-							<a href="https://github.com/Alex-GHP/tituprep/" target="_blank" rel="noopener noreferrer">
+							<a
+								href="https://github.com/Alex-GHP/tituprep/"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
 								<Github className="h-4 w-4" />
-								Repository</a>
+								Repository
+							</a>
 						</Button>
 					</div>
 				</CardContent>

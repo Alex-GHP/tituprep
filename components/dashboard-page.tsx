@@ -1,20 +1,20 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useLanguage } from "@/lib/language-context";
-import { generateRandomExam } from "@/lib/actions";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
-	FileText,
-	GraduationCap,
-	Shuffle,
-	Play,
 	Award,
 	BookOpen,
+	FileText,
+	GraduationCap,
+	Play,
+	Shuffle,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { generateRandomExam } from "@/lib/actions";
+import { useLanguage } from "@/lib/language-context";
 
 interface StandardExam {
 	id: string;
@@ -112,10 +112,7 @@ export function DashboardPage({
 										</p>
 										<div className="mt-1.5">
 											{exam.bestScore !== null ? (
-												<Badge
-													variant="secondary"
-													className="gap-1 text-xs"
-												>
+												<Badge variant="secondary" className="gap-1 text-xs">
 													<Award className="h-3 w-3" />
 													{exam.bestScore.toFixed(1)}
 												</Badge>
@@ -155,10 +152,7 @@ export function DashboardPage({
 											<BookOpen className="h-5 w-5" />
 										</div>
 										{subject.bestScore !== null && (
-											<Badge
-												variant="secondary"
-												className="gap-1 text-xs"
-											>
+											<Badge variant="secondary" className="gap-1 text-xs">
 												<Award className="h-3 w-3" />
 												{subject.bestScore.toFixed(1)}
 											</Badge>
@@ -166,9 +160,7 @@ export function DashboardPage({
 									</div>
 									<div>
 										<h3 className="font-semibold text-card-foreground text-sm leading-snug">
-											{language === "en"
-												? subject.nameEn
-												: subject.nameRo}
+											{language === "en" ? subject.nameEn : subject.nameRo}
 										</h3>
 										<p className="mt-1 text-xs text-muted-foreground">
 											{subject.questionCount} {t("dash.questions")}

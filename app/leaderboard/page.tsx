@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
 import { LeaderboardPage } from "@/components/leaderboard-page";
+import { createClient } from "@/lib/supabase/server";
 
 interface LeaderboardRow {
 	user_id: string;

@@ -20,6 +20,7 @@ export interface Database {
 					name_ro?: string;
 					module?: string | null;
 				};
+				Relationships: [];
 			};
 			questions: {
 				Row: {
@@ -58,6 +59,15 @@ export interface Database {
 					explanation_ro?: string | null;
 					subject_id?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "questions_subject_id_fkey";
+						columns: ["subject_id"];
+						isOneToOne: false;
+						referencedRelation: "subjects";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			exams: {
 				Row: {
@@ -87,6 +97,15 @@ export interface Database {
 					title_ro?: string | null;
 					created_at?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "exams_subject_id_fkey";
+						columns: ["subject_id"];
+						isOneToOne: false;
+						referencedRelation: "subjects";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			exam_questions: {
 				Row: {
@@ -104,36 +123,53 @@ export interface Database {
 					question_id?: string;
 					position?: number;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "exam_questions_exam_id_fkey";
+						columns: ["exam_id"];
+						isOneToOne: false;
+						referencedRelation: "exams";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "exam_questions_question_id_fkey";
+						columns: ["question_id"];
+						isOneToOne: false;
+						referencedRelation: "questions";
+						referencedColumns: ["id"];
+					},
+				];
 			};
-		profiles: {
-			Row: {
-				id: string;
-				display_name: string | null;
-				avatar_url: string | null;
-				preferred_language: "en" | "ro";
-				streak_count: number;
-				last_active_date: string | null;
-				created_at: string;
+			profiles: {
+				Row: {
+					id: string;
+					display_name: string | null;
+					avatar_url: string | null;
+					preferred_language: "en" | "ro";
+					streak_count: number;
+					last_active_date: string | null;
+					created_at: string;
+				};
+				Insert: {
+					id: string;
+					display_name?: string | null;
+					avatar_url?: string | null;
+					preferred_language?: "en" | "ro";
+					streak_count?: number;
+					last_active_date?: string | null;
+					created_at?: string;
+				};
+				Update: {
+					id?: string;
+					display_name?: string | null;
+					avatar_url?: string | null;
+					preferred_language?: "en" | "ro";
+					streak_count?: number;
+					last_active_date?: string | null;
+					created_at?: string;
+				};
+				Relationships: [];
 			};
-			Insert: {
-				id: string;
-				display_name?: string | null;
-				avatar_url?: string | null;
-				preferred_language?: "en" | "ro";
-				streak_count?: number;
-				last_active_date?: string | null;
-				created_at?: string;
-			};
-			Update: {
-				id?: string;
-				display_name?: string | null;
-				avatar_url?: string | null;
-				preferred_language?: "en" | "ro";
-				streak_count?: number;
-				last_active_date?: string | null;
-				created_at?: string;
-			};
-		};
 			user_attempts: {
 				Row: {
 					id: string;
@@ -168,6 +204,37 @@ export interface Database {
 					time_taken_seconds?: number | null;
 					completed_at?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "user_attempts_user_id_fkey";
+						columns: ["user_id"];
+						isOneToOne: false;
+						referencedRelation: "profiles";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "user_attempts_exam_id_fkey";
+						columns: ["exam_id"];
+						isOneToOne: false;
+						referencedRelation: "exams";
+						referencedColumns: ["id"];
+					},
+				];
+			};
+		};
+		Views: Record<string, never>;
+		Functions: {
+			get_leaderboard: {
+				Args: Record<string, never>;
+				Returns: {
+					user_id: string;
+					display_name: string | null;
+					avatar_url: string | null;
+					total_score: number;
+					streak_count: number;
+					leaderboard_score: number;
+					created_at: string;
+				}[];
 			};
 		};
 	};
@@ -183,6 +250,7 @@ export interface AnswerRecord {
 export type Subject = Database["public"]["Tables"]["subjects"]["Row"];
 export type Question = Database["public"]["Tables"]["questions"]["Row"];
 export type Exam = Database["public"]["Tables"]["exams"]["Row"];
-export type ExamQuestion = Database["public"]["Tables"]["exam_questions"]["Row"];
+export type ExamQuestion =
+	Database["public"]["Tables"]["exam_questions"]["Row"];
 export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 export type UserAttempt = Database["public"]["Tables"]["user_attempts"]["Row"];

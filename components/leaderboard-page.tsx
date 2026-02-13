@@ -1,10 +1,10 @@
 "use client";
 
-import { useLanguage } from "@/lib/language-context";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Award, Crown, Flame, Medal, Trophy } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Flame, Crown, Medal, Award } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from "@/lib/language-context";
 
 interface LeaderboardEntry {
 	rank: number;
@@ -22,17 +22,15 @@ interface LeaderboardPageProps {
 }
 
 function getRankIcon(rank: number) {
-	if (rank === 1)
-		return <Crown className="h-5 w-5 text-yellow-500" />;
-	if (rank === 2)
-		return <Medal className="h-5 w-5 text-gray-400" />;
-	if (rank === 3)
-		return <Award className="h-5 w-5 text-amber-600" />;
+	if (rank === 1) return <Crown className="h-5 w-5 text-yellow-500" />;
+	if (rank === 2) return <Medal className="h-5 w-5 text-gray-400" />;
+	if (rank === 3) return <Award className="h-5 w-5 text-amber-600" />;
 	return null;
 }
 
 function getRankStyle(rank: number, isCurrentUser: boolean) {
-	const base = "flex items-center gap-3 rounded-lg border p-3 sm:p-4 transition-colors";
+	const base =
+		"flex items-center gap-3 rounded-lg border p-3 sm:p-4 transition-colors";
 
 	if (isCurrentUser && rank <= 3) {
 		// Current user AND top 3 — combine both highlights
@@ -46,7 +44,8 @@ function getRankStyle(rank: number, isCurrentUser: boolean) {
 	if (rank === 1) return `${base} border-yellow-500/50 bg-yellow-500/10`;
 	if (rank === 2) return `${base} border-gray-400/50 bg-gray-400/10`;
 	if (rank === 3) return `${base} border-amber-600/50 bg-amber-600/10`;
-	if (isCurrentUser) return `${base} border-primary/50 bg-primary/10 ring-2 ring-primary/30`;
+	if (isCurrentUser)
+		return `${base} border-primary/50 bg-primary/10 ring-2 ring-primary/30`;
 
 	return `${base} border-border bg-card hover:bg-muted/50`;
 }
@@ -204,8 +203,7 @@ export function LeaderboardPage({
 											<Flame className="h-3 w-3 text-orange-500" />
 											<span className="text-xs text-muted-foreground">
 												{entry.streakCount} {t("leaderboard.dayStreak")}
-												{" · "}×
-												{(1 + entry.streakCount * 0.1).toFixed(1)}
+												{" · "}×{(1 + entry.streakCount * 0.1).toFixed(1)}
 											</span>
 										</div>
 									)}

@@ -1,17 +1,11 @@
 "use client";
 
-import { useLanguage } from "@/lib/language-context";
-import { createClient } from "@/lib/supabase/client";
+import { ArrowRight, BarChart3, Code2, Github, Timer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-	Code2,
-	Timer,
-	BarChart3,
-	ArrowRight,
-	Github,
-} from "lucide-react";
+import { useLanguage } from "@/lib/language-context";
+import { createClient } from "@/lib/supabase/client";
 
 export function LandingPage() {
 	const { t } = useLanguage();

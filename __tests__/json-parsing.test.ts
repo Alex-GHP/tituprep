@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { describe, expect, it } from "vitest";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
@@ -21,9 +21,7 @@ describe("practice_exams.json structure", () => {
 	});
 
 	it("each exam has an exam_id from 1 to 20", () => {
-		const ids = data.practice_exams.map(
-			(e: { exam_id: number }) => e.exam_id,
-		);
+		const ids = data.practice_exams.map((e: { exam_id: number }) => e.exam_id);
 		expect(ids).toEqual(Array.from({ length: 20 }, (_, i) => i + 1));
 	});
 
@@ -63,10 +61,7 @@ describe("practice_exams.json structure", () => {
 });
 
 describe("questions.json structure", () => {
-	const raw = fs.readFileSync(
-		path.join(DATA_DIR, "questions.json"),
-		"utf-8",
-	);
+	const raw = fs.readFileSync(path.join(DATA_DIR, "questions.json"), "utf-8");
 	const data = JSON.parse(raw);
 
 	it("has exam.modules array", () => {
@@ -83,12 +78,7 @@ describe("questions.json structure", () => {
 		const moduleKeys = data.exam.modules.map(
 			(m: Record<string, unknown>) => Object.keys(m)[0],
 		);
-		expect(moduleKeys).toEqual([
-			"module1",
-			"module2",
-			"module3",
-			"module4",
-		]);
+		expect(moduleKeys).toEqual(["module1", "module2", "module3", "module4"]);
 	});
 
 	it("has 15 subjects across all modules", () => {
@@ -108,7 +98,10 @@ describe("questions.json structure", () => {
 	it("every question has both ro and en keys with required fields", () => {
 		for (const moduleObj of data.exam.modules) {
 			for (const moduleVal of Object.values(moduleObj) as {
-				subjects: Record<string, { ro: Record<string, unknown>; en: Record<string, unknown> }[]>[];
+				subjects: Record<
+					string,
+					{ ro: Record<string, unknown>; en: Record<string, unknown> }[]
+				>[];
 			}[]) {
 				for (const subjectDict of moduleVal.subjects) {
 					for (const questions of Object.values(subjectDict)) {

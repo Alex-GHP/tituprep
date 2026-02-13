@@ -4,9 +4,9 @@
  * ALL questions for that subject.
  */
 
-import { supabase } from "./supabase-admin";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { supabase } from "./supabase-admin";
 
 interface QuestionLocalized {
 	question: string;

@@ -1,5 +1,5 @@
-import { createClient } from "@/lib/supabase/server";
 import { DashboardPage } from "@/components/dashboard-page";
+import { createClient } from "@/lib/supabase/server";
 
 interface StandardExamRow {
 	id: string;
@@ -41,7 +41,8 @@ export default async function Page() {
 		.eq("type", "standard")
 		.order("exam_number");
 
-	const standardExams = (standardExamsRaw ?? []) as unknown as StandardExamRow[];
+	const standardExams = (standardExamsRaw ??
+		[]) as unknown as StandardExamRow[];
 
 	// Fetch subject exams with embedded question counts
 	const { data: subjectExamsRaw } = await supabase
