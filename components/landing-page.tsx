@@ -1,15 +1,26 @@
 "use client";
 
 import { ArrowRight, BarChart3, Code2, Github, Timer } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/lib/language-context";
+import { useAuth } from "@/lib/supabase/auth-provider";
 import { createClient } from "@/lib/supabase/client";
 
 export function LandingPage() {
 	const { t } = useLanguage();
+	const { user } = useAuth();
+	const router = useRouter();
 	const supabase = createClient();
+
+	useEffect(() => {
+		if (user) {
+			router.push("/dashboard");
+		}
+	}, [user, router]);
 
 	const handleGitHubSignIn = async () => {
 		await supabase.auth.signInWithOAuth({
