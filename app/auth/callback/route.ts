@@ -2,16 +2,19 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-	const code = request.nextUrl.searchParams.get("code");
-	const next = request.nextUrl.searchParams.get("next") ?? "/dashboard";
+	const { searchParams, origin } = new URL(request.url);
+	const code = searchParams.get("code");
+	const next = searchParams.get("next") ?? "/dashboard";
+
+	const forwardedHost = request.headers.get("x-forwarded-host");
+	const isLocal = process.env.NODE_ENV === "development";
+	let redirectOrigin = origin;
+	if (!isLocal && forwardedHost) {
+		redirectOrigin = `https://${forwardedHost}`;
+	}
 
 	if (code) {
-		const redirectUrl = request.nextUrl.clone();
-		redirectUrl.pathname = next;
-		redirectUrl.searchParams.delete("code");
-		redirectUrl.searchParams.delete("next");
-
-		const redirectResponse = NextResponse.redirect(redirectUrl);
+		const redirectResponse = NextResponse.redirect(`${redirectOrigin}${next}`);
 
 		const supabase = createServerClient(
 			process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
@@ -37,11 +40,5 @@ export async function GET(request: NextRequest) {
 		}
 	}
 
-	// If something went wrong, redirect back to landing with error
-	const errorUrl = request.nextUrl.clone();
-	errorUrl.pathname = "/";
-	errorUrl.searchParams.delete("code");
-	errorUrl.searchParams.delete("next");
-	errorUrl.searchParams.set("error", "auth_failed");
-	return NextResponse.redirect(errorUrl);
+	return NextResponse.redirect(`${redirectOrigin}/?error=auth_failed`);
 }
