@@ -78,11 +78,11 @@ export function Navbar() {
 								variant={pathname === "/dashboard" ? "secondary" : "ghost"}
 								size="sm"
 								asChild
-								className="gap-1.5 text-foreground"
+								className="gap-1.5 text-foreground hidden md:flex"
 							>
 								<Link href="/dashboard">
 									<LayoutDashboard className="h-4 w-4" />
-									<span className="hidden sm:inline">{t("nav.dashboard")}</span>
+									<span className="hidden md:inline">{t("nav.dashboard")}</span>
 								</Link>
 							</Button>
 							<Button
