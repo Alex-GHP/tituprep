@@ -96,6 +96,8 @@ export async function submitExamAttempt(params: {
 		questionId: string;
 		selectedIndex: number | null;
 		correct: boolean;
+		selectedAnswerEn?: string | null;
+		selectedAnswerRo?: string | null;
 	}[];
 	timeTakenSeconds: number | null;
 }): Promise<string | null> {
