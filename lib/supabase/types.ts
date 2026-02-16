@@ -244,6 +244,8 @@ export interface AnswerRecord {
 	question_id: string;
 	selected_index: number | null;
 	correct: boolean;
+	selected_answer_en?: string | null;
+	selected_answer_ro?: string | null;
 }
 
 // Convenience type aliases

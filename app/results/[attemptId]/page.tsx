@@ -66,6 +66,8 @@ export default async function Page({ params }: PageProps) {
 		questionId: string;
 		selectedIndex: number | null;
 		correct: boolean;
+		selectedAnswerEn: string | null;
+		selectedAnswerRo: string | null;
 	}[];
 
 	return (

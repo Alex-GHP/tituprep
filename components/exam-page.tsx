@@ -106,6 +106,7 @@ export function ExamPage({
 
 	const isTimedExam = examType === "standard" || examType === "random";
 
+	const [sessionSeed] = useState(() => crypto.randomUUID());
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [answers, setAnswers] = useState<(number | null)[]>(
 		new Array(questions.length).fill(null),
@@ -115,18 +116,22 @@ export function ExamPage({
 	const [startTime] = useState(Date.now());
 	const [submitting, setSubmitting] = useState(false);
 
-	// Build shuffled options per question (stable for the session)
 	const shuffledQuestions = useMemo(() => {
-		return questions.map((q) => {
+		const questionOrder = seededShuffle(
+			questions.map((_, i) => i),
+			sessionSeed,
+		);
+
+		return questionOrder.map((qIdx) => {
+			const q = questions[qIdx];
 			const correctEn = q.correctAnswerEn;
 			const correctRo = q.correctAnswerRo;
 			const allOptionsEn = [...q.wrongAnswersEn, correctEn];
 			const allOptionsRo = [...q.wrongAnswersRo, correctRo];
 
-			// Use question ID as seed for consistent shuffle
 			const indices = seededShuffle(
 				allOptionsEn.map((_, i) => i),
-				q.id,
+				sessionSeed + q.id,
 			);
 
 			const shuffledEn = indices.map((i) => allOptionsEn[i]);
@@ -140,7 +145,7 @@ export function ExamPage({
 				correctIndex,
 			};
 		});
-	}, [questions]);
+	}, [questions, sessionSeed]);
 
 	const question = shuffledQuestions[currentIndex];
 	const totalQuestions = questions.length;
@@ -157,6 +162,8 @@ export function ExamPage({
 			questionId: q.id,
 			selectedIndex: answers[i],
 			correct: answers[i] === q.correctIndex,
+			selectedAnswerEn: answers[i] !== null ? q.optionsEn[answers[i]] : null,
+			selectedAnswerRo: answers[i] !== null ? q.optionsRo[answers[i]] : null,
 		}));
 
 		const attemptId = await submitExamAttempt({

@@ -36,6 +36,8 @@ interface AnswerData {
 	questionId: string;
 	selectedIndex: number | null;
 	correct: boolean;
+	selectedAnswerEn: string | null;
+	selectedAnswerRo: string | null;
 }
 
 interface ResultsPageProps {
@@ -49,24 +51,6 @@ interface ResultsPageProps {
 	correctCount: number;
 	answers: AnswerData[];
 	questions: QuestionData[];
-}
-
-/**
- * Deterministic shuffle matching the exam page's shuffle
- */
-function seededShuffle<T>(array: T[], seed: string): T[] {
-	const shuffled = [...array];
-	let hash = 0;
-	for (let i = 0; i < seed.length; i++) {
-		hash = (hash << 5) - hash + seed.charCodeAt(i);
-		hash |= 0;
-	}
-	for (let i = shuffled.length - 1; i > 0; i--) {
-		hash = (hash * 1664525 + 1013904223) | 0;
-		const j = (hash >>> 0) % (i + 1);
-		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-	}
-	return shuffled;
 }
 
 function parseQuestionContent(text: string): {
@@ -216,30 +200,19 @@ export function ResultsPage({
 			</h2>
 			<Accordion type="multiple" className="flex flex-col gap-3">
 				{answers.map((answer, idx) => {
-					const q = questions[idx];
+					const q = questions.find((q) => q.id === answer.questionId);
 					if (!q) return null;
 
 					const questionText = language === "en" ? q.questionEn : q.questionRo;
 					const correctAnswer =
 						language === "en" ? q.correctAnswerEn : q.correctAnswerRo;
-					const wrongAnswers =
-						language === "en" ? q.wrongAnswersEn : q.wrongAnswersRo;
 					const explanation =
 						language === "en" ? q.explanationEn : q.explanationRo;
 
-					// Reconstruct shuffled options to show what the user saw
-					const allOptions = [...wrongAnswers, correctAnswer];
-					const indices = seededShuffle(
-						allOptions.map((_, i) => i),
-						q.id,
-					);
-					const shuffledOptions = indices.map((i) => allOptions[i]);
-					const _correctIdx = indices.indexOf(allOptions.length - 1);
-
 					const selectedOption =
-						answer.selectedIndex !== null
-							? shuffledOptions[answer.selectedIndex]
-							: null;
+						language === "en"
+							? answer.selectedAnswerEn
+							: answer.selectedAnswerRo;
 
 					const { textParts, codeBlocks } = parseQuestionContent(questionText);
 					const questionImageUrl = getQuestionImageUrl(
