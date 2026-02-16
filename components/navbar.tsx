@@ -31,7 +31,7 @@ export function Navbar() {
 	const router = useRouter();
 	const [streak, setStreak] = useState<number>(0);
 
-	// Fetch streak count for logged-in user
+	// Fetch streak count for logged-in user (only valid if active today or yesterday)
 	useEffect(() => {
 		if (!user) {
 			setStreak(0);
@@ -41,13 +41,34 @@ export function Navbar() {
 		(
 			supabase
 				.from("profiles")
-				.select("streak_count")
+				.select("streak_count, last_active_date")
 				.eq("id", user.id)
 				.single() as unknown as Promise<{
-				data: { streak_count: number } | null;
+				data: {
+					streak_count: number;
+					last_active_date: string | null;
+				} | null;
 			}>
 		).then(({ data }) => {
-			if (data) setStreak(data.streak_count);
+			if (!data) return;
+			if (!data.last_active_date) {
+				setStreak(0);
+				return;
+			}
+			const today = new Date();
+			const todayStr = today.toISOString().split("T")[0];
+			const yesterday = new Date(today);
+			yesterday.setDate(yesterday.getDate() - 1);
+			const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+			if (
+				data.last_active_date === todayStr ||
+				data.last_active_date === yesterdayStr
+			) {
+				setStreak(data.streak_count);
+			} else {
+				setStreak(0);
+			}
 		});
 	}, [user]);
 
