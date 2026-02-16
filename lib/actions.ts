@@ -135,9 +135,9 @@ export async function submitExamAttempt(params: {
 
 /**
  * Update the user's daily streak after completing an attempt.
- * - If last active was yesterday: increment streak
  * - If last active was today: no change (already counted)
- * - If last active was >1 day ago or null: reset streak to 1
+ * - If last active was yesterday: increment streak (consecutive day)
+ * - If last active was >1 day ago or null: start a new streak at 1
  */
 async function updateStreak(
 	supabase: Awaited<ReturnType<typeof createClient>>,
@@ -153,24 +153,21 @@ async function updateStreak(
 
 	if (!profile) return;
 
-	const today = new Date();
-	const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD
+	const now = new Date();
+	const todayStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
 
 	// Already active today — nothing to update
 	if (profile.last_active_date === todayStr) return;
 
-	let newStreak = 1; // default: reset
+	const yesterday = new Date(now);
+	yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+	const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-	if (profile.last_active_date) {
-		const _lastDate = new Date(profile.last_active_date);
-		const yesterday = new Date(today);
-		yesterday.setDate(yesterday.getDate() - 1);
-		const yesterdayStr = yesterday.toISOString().split("T")[0];
+	let newStreak = 1; // default: start new streak
 
-		if (profile.last_active_date === yesterdayStr) {
-			// Consecutive day — increment streak
-			newStreak = profile.streak_count + 1;
-		}
+	if (profile.last_active_date === yesterdayStr && profile.streak_count > 0) {
+		// Consecutive day — increment streak
+		newStreak = profile.streak_count + 1;
 	}
 
 	await (supabase.from("profiles") as ReturnType<typeof supabase.from>)
