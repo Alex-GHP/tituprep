@@ -19,7 +19,10 @@ interface Translations {
 
 const translations: Translations = {
 	// Landing / Hero
-	"hero.title": { en: "Master the Bachelor Exam", ro: "Master the Bachelor Exam" },
+	"hero.title": {
+		en: "Master the Bachelor Exam",
+		ro: "Master the Bachelor Exam",
+	},
 	"hero.subtitle": {
 		en: "Practice smarter with timed exams and subject-based training.",
 		ro: "Practice smarter with timed exams and subject-based training.",
