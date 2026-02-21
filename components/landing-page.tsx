@@ -42,11 +42,8 @@ export function LandingPage() {
 							alt="TituPrep logo"
 							className="h-4 w-4"
 						/>
-						<span>Practice Exam Platform</span>
+						<span className="text-xl">Practice Exam Platform</span>
 					</div>
-					<h1 className="text-balance text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl">
-						{t("hero.title")}
-					</h1>
 					<p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
 						{t("hero.subtitle")}
 					</p>

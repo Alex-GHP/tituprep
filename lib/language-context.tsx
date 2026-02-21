@@ -24,10 +24,10 @@ const translations: Translations = {
 		ro: "Master the Bachelor Exam",
 	},
 	"hero.subtitle": {
-		en: "Practice smarter with timed exams and subject-based training.",
-		ro: "Practice smarter with timed exams and subject-based training.",
+		en: "Grile care acopera toate intrebarile. Posibilitatea de a genera un examen nou random.",
+		ro: "Grile care acopera toate intrebarile. Posibilitatea de a genera un examen nou random.",
 	},
-	"hero.cta": { en: "Get Started", ro: "Incepe Acum" },
+	"hero.cta": { en: "Incepe", ro: "Incepe" },
 	"hero.spotlight": {
 		en: "Developer Spotlight",
 		ro: "Proiectul Dezvoltatorului",
@@ -38,29 +38,35 @@ const translations: Translations = {
 	},
 
 	// Features
-	"features.timedExams": { en: "Timed Exams", ro: "Examene Cronometrate" },
-	"features.timedExamsDesc": {
-		en: "Simulate real exam conditions with countdown timers and 20 practice exams.",
-		ro: "Simuleaza conditii reale de examen cu cronometru si 20 de examene de practica.",
+	"features.timedExams": {
+		en: "Examene Cronometrate",
+		ro: "Examene Cronometrate",
 	},
-	"features.codeQuestions": { en: "Code Questions", ro: "Intrebari cu Cod" },
+	"features.timedExamsDesc": {
+		en: "Conditii reale de examen. Intrebari amestecate si examene contra-timp.",
+		ro: "Conditii reale de examen. Intrebari amestecate si examene contra-timp.",
+	},
+	"features.codeQuestions": {
+		en: "Intrebarile Oficiale",
+		ro: "Intrebarile Oficiale",
+	},
 	"features.codeQuestionsDesc": {
-		en: "Practice with real code snippets and syntax-highlighted questions.",
-		ro: "Exerseaza cu fragmente de cod reale si intrebari cu evidentierea sintaxei.",
+		en: "Intrebarile oficiale din PDF cu syntax-highlighted code snippets.",
+		ro: "Intrebarile oficiale din PDF cu syntax-highlighted code snippets.",
 	},
 	"features.trackProgress": {
-		en: "Track Progress",
-		ro: "Urmareste Progresul",
+		en: "Progres Salvat si Leaderboard",
+		ro: "Progres Salvat si Leaderboard",
 	},
 	"features.trackProgressDesc": {
-		en: "Monitor your scores and progress across subjects and exams.",
-		ro: "Monitorizeaza scorurile si progresul pe materii si examene.",
+		en: "Logica de streak si leaderboard intre studenti. Salveaza-ti progresul la teste.",
+		ro: "Logica de streak si leaderboard intre studenti. Salveaza-ti progresul la teste.",
 	},
 
 	// Auth
-	"auth.github": { en: "Continue with GitHub", ro: "Continua cu GitHub" },
+	"auth.github": { en: "Github Sign In", ro: "Github Sign In" },
 	"auth.signIn": {
-		en: "Sign in to get started",
+		en: "Conecteaza-te pentru a incepe",
 		ro: "Conecteaza-te pentru a incepe",
 	},
 
@@ -211,7 +217,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 );
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-	const [language, setLanguageState] = useState<Language>("en");
+	const [language, setLanguageState] = useState<Language>("ro");
 	const { user } = useAuth();
 	const supabase = createClient();
 
